@@ -15,6 +15,7 @@ ClogLib is small, easy to use and fast C/C++ logging library.
 
 ## Features
 
+- Thread-safe
 - Relatively fast (avg. 200.000 log/sec)
 - Different log targets:
 	- Console logging (stdout or stderr)
@@ -28,16 +29,22 @@ ClogLib is small, easy to use and fast C/C++ logging library.
 
 - Clone the repository from [GitHub][] or [GitLab][]:
 
-		git clone https://github.com/fksvs/cloglib
-		git clone https://gitlab.com/fksvs/cloglib
+```console
+git clone https://github.com/fksvs/cloglib
+git clone https://gitlab.com/fksvs/cloglib
+```
 
 - Change directory to `cloglib`:
 
-		cd cloglib/
+```console
+cd cloglib/
+```
 
 - Copy `cloglib.c` and `cloglib.h` from `src/` to your project path:
 
-		cp src/cloglib.* [your_project_path]
+```console
+cp src/cloglib.* [your_project_path]
+```
 
 - Include `cloglib.h` in your project and compile with it.
 
@@ -76,7 +83,7 @@ Initialize basic log file.
 
 #### `init_rotate_log(char *filename, int log_level, size_t max_file_size, size_t max_rotation)`
 
-Initailize rotating log file.
+Initailize rotating log file. New files created with a timestamp.
 
 #### `add_fd_log(int fd, intlog_level)`
 
@@ -90,7 +97,7 @@ Close opened log files, should be called while closing program.
 
 Main logging function. Generates log message and writes it to console and log files. Logging could be done with function-like macros:
 
-```
+```c
 log_fatal(const char *msg_format, ...) or log_f(const char *msg_format, ...)
 log_critical(const char *msg_format, ...) or log_c(const char *msg_format, ...)
 log_error(const char *msg_format, ...) or log_e(const char *msg_format, ...)
@@ -106,7 +113,9 @@ log_trace(const char *msg_format,...) or log_t(const char *msg_format, ...)
 Log message format could be customly formatted with `set_format()`
 Default log format is specified in `cloglib.h` as `DEFAULT_FORMAT` in the form of:
 
-	[10.02.2023] CRITICAL [source_file.c:149] Critical error !
+```
+[10.02.2023] CRITICAL [source_file.c:149] Critical error !
+```
 
 #### Flags:
 
@@ -128,32 +137,42 @@ Default log format is specified in `cloglib.h` as `DEFAULT_FORMAT` in the form o
 
 #### Setting Custom Format:
 
-		set_format("[%H:%M:%S] [%L] [%P/%t/%U] [%F:%l] : %A\n")
+```c
+set_format("[%H:%M:%S] [%L] [%P/%t/%U] [%F:%l] : %A\n")
+```
 
 After setting the custom format above, log messages would be in the form of:
 
-		[23:38:10] [INFO] [23421/4328/1000] [source_file.c:243] : socket initialized
+```
+[23:38:10] [INFO] [23421/4328/1000] [source_file.c:243] : socket initialized
+```
 
 #### Setting Format to Default:
 
 `DEFAULT_FORMAT` is the default log format.
 
-		set_format(DEFAULT_FORMAT)
+```c
+set_format(DEFAULT_FORMAT)
+```
 
 ## Examples
 
 Sample program located in `test/` as `example.c`. Build it with:
 
-		make example
+```console
+make example
+```
 
 Change directory to `test/` and run the example:
 
-		cd test/
-		./example
+```console
+cd test/
+./example
+```
 
 ##### Console Logging:
 
-```
+```c
 #include "cloglib.h"
 
 int main(int argc, char *argv[])
@@ -180,7 +199,7 @@ int main(int argc, char *argv[])
 
 ##### Basic Logging File:
 
-```
+```c
 #include "cloglib.h"
 
 int main(int argc, char *argv[])
@@ -201,7 +220,7 @@ int main(int argc, char *argv[])
 
 ##### Rotated Logging File:
 
-```
+```c
 #include "cloglib.h"
 
 int main(int argc, char *argv[])
@@ -223,7 +242,7 @@ int main(int argc, char *argv[])
 
 ## Benchmark
 
-Benchmarks done in Void Linux, Intel i5-8265U @ 3.9GHz
+Benchmarks done in Void Linux, Intel i5-8265U @ 3.9GHz, 16Gb RAM
 
 ```
 --------------------------------------
@@ -243,12 +262,16 @@ benchmarking rotated log file...
 
 To run benchmark on your system, build the source:
 
-		make benchmark
+```console
+make benchmark
+```
 
-Change directory to `test/` and run `benchmark`
+Change directory to `test/` and run `benchmark`:
 
-		cd test/
-		./benchmark
+```console
+cd test/
+./benchmark
+```
 
 ## License
 

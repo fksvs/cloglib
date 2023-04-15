@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <pthread.h>
 #include <time.h>
 #include <errno.h>
 
@@ -27,6 +28,18 @@ static const char *level_string[] = { "FATAL",	"CRITICAL", "ERROR", "WARNING",
 				      "NOTICE", "INFO",	    "DEBUG", "TRACE" };
 static const char *level_color[] = { RED,    RED,   RED,  RED,
 				     YELLOW, GREEN, CYAN, BLUE };
+
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void lock()
+{
+	pthread_mutex_lock(&mutex);
+}
+
+static void unlock()
+{
+	pthread_mutex_unlock(&mutex);
+}
 
 void set_stream(int stream)
 {
@@ -77,6 +90,8 @@ int init_file_log(char *filename, int log_level, int log_type,
 {
 	int fd;
 
+	lock();
+
 	if ((fd = open(filename, O_APPEND | O_WRONLY | O_CREAT,
 		       S_IRUSR | S_IWUSR)) == -1) {
 		fprintf(stderr, "open : %s\n", strerror(errno));
@@ -84,7 +99,6 @@ int init_file_log(char *filename, int log_level, int log_type,
 	}
 
 	memset(&file_logs[file_log_ind], 0, sizeof(file_log));
-
 	strncpy(file_logs[file_log_ind].filename, filename, strlen(filename));
 	file_logs[file_log_ind].fd = fd;
 	file_logs[file_log_ind].log_level = log_level;
@@ -92,8 +106,10 @@ int init_file_log(char *filename, int log_level, int log_type,
 	file_logs[file_log_ind].max_file_size = max_file_size;
 	file_logs[file_log_ind].total_file = 1;
 	file_logs[file_log_ind].max_rotation = max_rotation;
-
 	file_log_ind += 1;
+
+	unlock();
+
 	return fd;
 }
 
@@ -111,21 +127,27 @@ int init_rotate_log(char *filename, int log_level, size_t max_file_size,
 
 int add_fd_log(int fd, int log_level)
 {
-	memset(&file_logs[file_log_ind], 0, sizeof(file_log));
+	lock();
 
+	memset(&file_logs[file_log_ind], 0, sizeof(file_log));
 	file_logs[file_log_ind].fd = fd;
 	file_logs[file_log_ind].log_level = log_level;
 	file_logs[file_log_ind].log_type = BASIC_LOG;
-
 	file_log_ind += 1;
+
+	unlock();
+
 	return fd;
 }
 
 void close_log_files()
 {
 	int ind;
+	
+	lock();
 	for (ind = 0; ind < file_log_ind; ind += 1)
 		close(file_logs[ind].fd);
+	unlock();
 }
 
 static int rotate_file(file_log *file)
@@ -290,8 +312,11 @@ void cloglib_log(int log_level, const char *log_file, int log_line,
 
 	memset(data, 0, MSG_SIZE);
 	create_log_msg(data, &msg);
+	
+	lock();
 	write_console(data, log_level);
 	write_log_file(data, log_level);
+	unlock();
 
 	va_end(msg.msg_ap);
 }
