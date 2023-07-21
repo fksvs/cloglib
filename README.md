@@ -5,13 +5,13 @@ ClogLib is small, easy to use and fast C/C++ logging library.
 
 ## Table of Contents
 
-1. [Features](#Features)
-2. [Installation](#Installation)
-3. [Functions](#Functions)
-4. [Custom Formatting](#Custom-Formatting)
-5. [Examples](#Examples)
-6. [Benchmark](#Benchmark)
-7. [License](#License)
+1. [Features](#features)
+2. [Installation](#installation)
+3. [Functions](#functions)
+4. [Custom Formatting](#custom-formatting)
+5. [Examples](#examples)
+6. [Benchmark](#benchmark)
+7. [License](#license)
 
 ## Features
 
