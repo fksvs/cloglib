@@ -61,6 +61,8 @@ Set log level for console. Default log level is `LOG_TRACE`.
 
 #### `set_quiet(bool quiet)`
 
+Enable or disable console log.
+
 #### `set_color(bool color)`
 
 Enable or disable colored output on console. `true` for enabling colored output and `false` for disabling. Color is disabled by default.
