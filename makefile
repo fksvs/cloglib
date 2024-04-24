@@ -9,7 +9,7 @@ benchmark :
 example :
 	$(CC) $(CFLAGS) -o test/example src/cloglib.c test/example.c
 
-.PHONY = clean
+.PHONY : clean
 clean:
 	find test/ -name "benchmark" -delete
 	find test/ -name "example" -delete
