@@ -6,6 +6,8 @@
 
 # ignore executables
 *.out
+test/benchmark
+test/example
 
 # ignore log files
 *.log
